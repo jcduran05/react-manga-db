@@ -6,11 +6,11 @@ var rp = require('request-promise');
 var cheerio = require('cheerio');
 var Promise = require('bluebird');
 
-var db = require('../db');
-var Genre = require('../db/models/genre');
-var Manga = require('../db/models/manga');
-var MangaDetails = require('../db/models/manga_detail');
-var MangaGenre = require('../db/models/manga_genre');
+var db = require('APP/db');
+var Genre = require('APP/db/models/genre');
+var Manga = require('APP/db/models/manga');
+var MangaDetails = require('APP/db/models/manga_detail');
+var MangaGenre = require('APP/db/models/manga_genre');
 
 var genres = [];
 var genrePagePromise = rp('https://myanimelist.net/manga.php');
