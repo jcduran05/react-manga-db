@@ -4,12 +4,19 @@ const Sequelize = require('sequelize')
 const db = require('APP/db')
 
 const Creator = db.define('creator', {
-  name: {
+  given_name: {
     type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
+    allowNull: false
   },
-  jp_name: {
+  family_name: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  jp_given_name: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  jp_family_name: {
     type: Sequelize.STRING,
     allowNull: false
   }

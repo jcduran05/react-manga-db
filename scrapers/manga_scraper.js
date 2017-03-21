@@ -13,78 +13,14 @@ var Manga = require('APP/db/models/manga');
 var MangaDetails = require('APP/db/models/manga_detail');
 var MangaGenre = require('APP/db/models/manga_genre');
 
-var fetchGenresPromise = require('./genres_scraper').fetchGenresPromise;
 
-// Should be less as some of their data includes
-// novels and there is a check to prevent those
-// items from being added to the db
-var topMangaPromise = [
-  rp('https://myanimelist.net/topmanga.php'), // 50
-  rp('https://myanimelist.net/topmanga.php?limit=50'), // 100
-  // rp('https://myanimelist.net/topmanga.php?limit=100'), // 150
-  // rp('https://myanimelist.net/topmanga.php?limit=150'), // 200
-  // rp('https://myanimelist.net/topmanga.php?limit=200'), // 250
-  // rp('https://myanimelist.net/topmanga.php?limit=250'), // 300
-  // rp('https://myanimelist.net/topmanga.php?limit=300'), // 350
-  // rp('https://myanimelist.net/topmanga.php?limit=350'), // 400
-  // rp('https://myanimelist.net/topmanga.php?limit=400'), // 450
-  // rp('https://myanimelist.net/topmanga.php?limit=450'), // 500
-  // rp('https://myanimelist.net/topmanga.php?limit=500'), // 550
+// ////////////////////////////////////////////
+var manga_links = [
+  // 'https://myanimelist.net/manga/25/Fullmetal_Alchemist',
+  'https://myanimelist.net/manga/2/Berserk',
+  'https://myanimelist.net/manga/656/Vagabond'
   ];
-
-// ////////////////////////////////////////////
-// // Scrape top manga and genres
-// ////////////////////////////////////////////
-var manga_links = [];
 var manga = [];
-
-var fetchTopMangaPromise = function() {
-Promise.all(topMangaPromise)
-.then(function (htmlArr) {
-  htmlArr.forEach(function(htmlObj, idx) {
-    var $ = cheerio.load(htmlObj);
-
-    // Process html to get top manga
-    $('.ranking-list .title .detail').each(function(idx, elem) {
-      // Analyzing text to make sure it's a manga and not a novel
-      var text = $(this).find('.information').text();
-      if (text.includes('Manga')) {
-        var mangaTitleLink = $(this).find('.hoverinfo_trigger');
-        var manga_title = $(mangaTitleLink).text();
-        var manga_link = $(mangaTitleLink).attr('href');
-
-        manga.push({ title: manga_title });
-        manga_links.push(manga_link);
-      }
-    });
-  });
-
-  // Populate db with manga data
-  var mangaPromise = Manga.bulkCreate(manga);
-  return mangaPromise;
-})
-.then(function(createdManga) {
-  console.log('Seeded manga table successfully.');
-  return processMangaLinks();
-})
-.catch(errorFunc);
-}
-
-var errorFunc = function(err) {
-  console.log(err);
-}
-// ////////////////////////////////////////////
-
-fetchGenresPromise
-.then(function(sequelizeObj) {
-  return fetchTopMangaPromise();
-})
-.catch(errorFunc);
-
-var errorFunc = function(err) {
-  // console.log(err);
-}
-
 // ////////////////////////////////////////////
 
 var processMangaLinks = function() {
@@ -97,8 +33,7 @@ var processMangaLinks = function() {
       var manga_title = $('h1 span').text();
       var manga_table = {}
       var manga_genres = [];
-
-      console.log(manga_title);
+      var manga_authors = [];
 
 
       // Creating array of genres
@@ -120,6 +55,23 @@ var processMangaLinks = function() {
           if (publish_data[1] != '?') {
             manga_table.publication_end = moment(publish_data[1], 'MMM DD,YYYY').format();
           }
+        } else if (publish_data.includes('Authors:')) {
+          publish_data = publish_data.replace('Authors:\n', '');
+          publish_data = publish_data.replace(/\(.*?\)/g, '$%&');
+          publish_data = publish_data.split('$%&,');
+          publish_data.forEach(a => {
+            var author = a.replace('$%&', '').trim().split(',');
+
+            var authorObj = {
+              given_name: author[1].trim(),
+              family_name: author[0].trim()
+            };
+
+            manga_authors.push(authorObj);
+          });
+          console.log(manga_authors);
+        } else if (publish_data.includes('Serialization:')) {
+          console.log(publish_data);
         }
       });
 
@@ -147,9 +99,9 @@ var processMangaLinks = function() {
       return Promise.all([manga_genres, findMangaPromise, manga_table, manga_details]);
     })
     .then(function(result) {
-      console.log('===========');
-      console.log(result[1]);
-      console.log('===========');
+      // console.log('===========');
+      // console.log(result[1]);
+      // console.log('===========');
       var manga_genres = result[0];
       var mangaId = result[1].dataValues.id;
       var manga_details = result[3];
@@ -188,16 +140,19 @@ var processMangaLinks = function() {
       });
 
       // var createMangaGenresPromise = MangaGenre.bulkCreate(mangaGenresArr);
-      return MangaGenre.bulkCreate(mangaGenresArr);
+      // return MangaGenre.bulkCreate(mangaGenresArr);
+      return;
     })
 
     // Scraping and updating db complete
     .then(function() {
       console.log('Process complete.');
-      return;
+      process.exit(0);
+      // return;
     })
     .catch(function(err) {
       // console.log(err);
+      process.exit(0);
     })
 
   })
@@ -210,3 +165,5 @@ var download = function(uri, filename, callback){
     request(uri).pipe(fs.createWriteStream('./public/images/' + filename)).on('close', function() { console.log('Finished downloading image.') });
   });
 };
+
+processMangaLinks();

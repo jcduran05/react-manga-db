@@ -1807,3 +1807,48 @@ section {
     color: #9b9b9b;
     font-weight: 300;
 }
+
+.right_section .navbar-nav > span > li > a {
+    padding: 0 6px 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #7d7d7d;
+    font-size: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.right_section .navbar-nav > span > li:first-child a:after {
+    content: " /";
+    margin-left: 5px;
+}
+
+@media (min-width: 768px) {
+    .navbar-nav > span > li {
+        float: left;
+    }
+}
+
+.nav > span > li {
+    position: relative;
+    display: block;
+}
+
+.btn {
+    border-radius: 0px;
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+input.login-username {
+    margin-bottom: 10px;
+    border-radius: 0;
+}
+
+input.login-password {
+    margin-bottom: 10px;
+    border-radius: 0;
+}

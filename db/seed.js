@@ -6,7 +6,7 @@ const seedUsers = () => db.Promise.map([
 ], user => db.model('users').create(user))
 
 db.didSync
-  .then(() => db.sync({force: true}))
+  .then(() => db.sync({force: false}))
   .then(seedUsers)
   .then(users => console.log(`Seeded ${users.length} users OK`))
   .catch(error => console.error(error))
