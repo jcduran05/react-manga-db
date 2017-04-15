@@ -20,4 +20,30 @@ export const loadAllManga = () =>
       }))
       .catch((err) => console.log(err))
 
+const FETCH_ALL_MANGA = 'FETCH_ALL_MANGA';
+const FETCH_ALL_MANGA_SUCCESS = 'FETCH_ALL_MANGA_SUCCESS';
+const FETCH_ALL_MANGA_FAILURE = 'FETCH_ALL_MANGA_FAILURE';
+
+export const fetchAllManga = () => {
+  const request = axios({
+    method: 'get',
+    url: '/api/manga/'
+  });
+
+  return function(dispatch) {
+    dispatch({
+    type: FETCH_POSTS,
+    payload: request
+    });
+  }
+}
+
+export function fetchPostsSuccess(posts) {
+  return {
+    type: FETCH_POSTS_SUCCESS,
+    payload: posts
+  };
+}
+
+
 export default reducer

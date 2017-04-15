@@ -1,4 +1,6 @@
 import React from 'react'
+import {register} from 'APP/app/reducers/auth'
+import {connect} from 'react-redux'
 
 export const Register = ({register}) => (
   <div className="row row-spacer">
@@ -26,9 +28,6 @@ export const Register = ({register}) => (
     </div>
   </div>
 )
-
-import {register} from 'APP/app/reducers/auth'
-import {connect} from 'react-redux'
 
 export default connect(
    state => ({}),
