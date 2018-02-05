@@ -4,10 +4,13 @@ const chalk = require('chalk')
 const Sequelize = require('sequelize')
 const app = require('APP')
 
-const name = (process.env.DATABASE_NAME || app.name) +
-  (app.isTesting ? '_test' : '')
+if (process.env.NODE_ENV !== 'production') require('../secrets')
 
-const url = process.env.DATABASE_URL || `postgres://localhost:5432/${name}`
+const name = process.env.DATABASE_NAME
+const username = (process.env.DATABASE_USERNAME ? process.env.DATABASE_USERNAME : '')
+const password = (process.env.DATABASE_PASSWORD ? process.env.DATABASE_PASSWORD : '')
+const url = process.env.DATABASE_URL || (name && username && password ?
+    `postgres://${username}:${password}@localhost:5432/${name}` : `postgres://localhost:5432/boilermaker`)
 
 console.log(chalk.yellow(`Opening database connection to ${url}`));
 
