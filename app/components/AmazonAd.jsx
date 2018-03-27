@@ -22,7 +22,7 @@ class AmazonAd extends Component {
     varScript.text = `
       amzn_assoc_placement = "adunit0";
       amzn_assoc_search_bar = "false";
-      amzn_assoc_tracking_id = "juanduran-20";
+      amzn_assoc_tracking_id = "";
       amzn_assoc_ad_mode = "search";
       amzn_assoc_ad_type = "smart";
       amzn_assoc_marketplace = "amazon";
@@ -30,7 +30,7 @@ class AmazonAd extends Component {
       amzn_assoc_title = "Shop Related Products";
       amzn_assoc_default_search_phrase = "Berserk Manga";
       amzn_assoc_default_category = "Books";
-      amzn_assoc_linkid = "c4eec420aa330e5e396581a1746dfe3c";
+      amzn_assoc_linkid = "";
       amzn_assoc_default_browse_node = "283155";
       amzn_assoc_rows = "1";
     `;
@@ -61,7 +61,7 @@ class AmazonAd extends Component {
     <div>
     <script type="text/javascript">
       amzn_assoc_placement = "adunit0";
-      amzn_assoc_tracking_id = "juanduran-20";
+      amzn_assoc_tracking_id = "";
       amzn_assoc_ad_mode = "search";
       amzn_assoc_ad_type = "smart";
       amzn_assoc_marketplace = "amazon";
@@ -69,7 +69,7 @@ class AmazonAd extends Component {
       amzn_assoc_title = "Shop Related Products";
       amzn_assoc_default_search_phrase = "Berserk Manga";
       amzn_assoc_default_category = "All";
-      amzn_assoc_linkid = "567c564ba1a0a2fc2b33b834f1458833";
+      amzn_assoc_linkid = "";
       amzn_assoc_rows = "4";
       amzn_assoc_design = "text_links";
     </script>
