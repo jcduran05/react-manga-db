@@ -35,6 +35,10 @@ module.exports = {
           presets: ['react', 'es2015', 'stage-2']
         }
       }]
+    }],
+    loaders: [{
+      test: /\.css$/,
+      loader: "style-loader!css-loader"
     }]
   },
   plugins: devMode ? [

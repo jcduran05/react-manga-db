@@ -13,16 +13,8 @@ const Login = ({ login, error, handleSubmit, pristine, reset, submitting }) => {
   const renderField = ({ input, label, type, meta: { touched, error } }) => (
     <div>
       <label>{label}</label>
-      <input {...input}/>
+      <input className="form-control login-username" {...input}/>
       {touched && error && <div className="error">{error}</div>}
-    </div>
-  )
-
-  const renderSelect = field => (
-    <div>
-      <label>{field.input.label}</label>
-      <select {...field.input}/>
-      {field.touched && field.error && <div className="error">{field.error}</div>}
     </div>
   )
 
@@ -30,44 +22,28 @@ const Login = ({ login, error, handleSubmit, pristine, reset, submitting }) => {
     <div className="row row-spacer">
       <div className="col-md-12">
         <form className="form-signin" onSubmit={handleSubmit(handleFormSubmit)}>
-          <div className="col-md-12 text-center">
-            <Field name="username" type="email" component={renderField} label="Email" className="form-control login-username" />
-          </div>
-          <div className="col-md-12 text-center">
 
+          <div className="col-md-12 text-center">
+            <Field name="username" type="email" component={renderField} label="Email" />
+          </div>
+
+          <div className="col-md-12 text-center">
              <Field name="password" type="password" component={renderField} label="Password" className="form-control login-password" />
           </div>
+
           <div className="col-md-12 text-center">
             {error && <strong>{error}</strong>}
           </div>
+
           <div className="col-md-12 text-center">
             <input type="submit" value="Login" className="btn btn-default" />
           </div>
+
         </form>
       </div>
     </div>
   )
 }
-
-{/*
-
-<form className="form-signin" onSubmit={evt => {
-        evt.preventDefault()
-        login(evt.target.username.value, evt.target.password.value)
-      } }>
-        <div className="col-md-12 text-center">
-          <label htmlFor="loginUsername">Email</label>
-          <input name="username" type="email" id="loginUsername" className="form-control login-username" />
-        </div>
-        <div className="col-md-12 text-center">
-          <label htmlFor="loginPassword">Password</label>
-          <input name="password" type="password" id="loginPassword" className="form-control login-password" />
-        </div>
-        <div className="col-md-12 text-center">
-          <input type="submit" value="Login" className="btn btn-default" />
-        </div>
-      </form>
-*/}
 
 function validate(values) {
     const errors = {};

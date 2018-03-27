@@ -5,8 +5,28 @@ import { Link } from 'react-router';
 
 import * as Actions from '../reducers/manga';
 
+import AmazonAd from '../components/AmazonAd';
+
+import { compose } from 'recompose';
+
+const isLoading = function() {
+  return (
+    <div>
+      <div className="col-md-12">loading ...</div>
+    </div>
+  )
+}
+
 class Manga extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true
+    }
+  }
+
+  componentDidMount() {
     this.props.actions.loadManga(this.props.params.title);
   }
 
@@ -19,7 +39,7 @@ class Manga extends Component {
     if (this.props.manga == undefined || this.props.manga.length == 0) {
       return (
         <div>
-          <div className="col-md-12"></div>
+          <div className="col-md-12">loading ...</div>
         </div>
       )
     }
@@ -67,6 +87,9 @@ class Manga extends Component {
                     { mangaGenres }
                   </div>
                 </div>
+              </div>
+              <div className="col-md-12 row-spacer">
+                <AmazonAd />
               </div>
             </div>
           </div>

@@ -7,7 +7,7 @@ import moment from 'moment';
 import * as Actions from '../reducers/genre';
 
 class Genre extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.actions.loadGenre(this.props.params.genre);
   }
 

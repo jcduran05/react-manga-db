@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import * as Actions from '../reducers/allGenres';
 
 class Genres extends Component {
-  componentWillMount() {
+  componenDidMount() {
     this.props.actions.loadAllGenres();
   }
 

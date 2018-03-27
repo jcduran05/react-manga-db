@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Header from '../containers/Header';
+import { compose } from 'recompose';
 
 export default class App extends Component {
   render() {

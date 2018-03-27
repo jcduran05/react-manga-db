@@ -7,7 +7,7 @@ import moment from 'moment';
 import * as Actions from '../reducers/allManga';
 
 class Home extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.actions.loadAllManga();
   }
 

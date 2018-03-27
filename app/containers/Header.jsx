@@ -10,16 +10,16 @@ const Header = ({ user, children }) => {
     <div>
       <div className="header-section">
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-4 col-sm-4 col-xs-3">
             <div className="left_section">
             </div>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 col-sm-4 col-xs-4">
             <div className="logo">
                 <Link to="/"><span className="main-title">Manga DB</span></Link>
             </div>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 col-sm-4 col-xs-5">
             <div className="right_section">
               <ul className="nav navbar-nav">
                 {user ? <WhoAmI/> : <LoginHeader/>}

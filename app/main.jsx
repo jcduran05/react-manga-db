@@ -16,6 +16,8 @@ import Manga from './containers/Manga'
 import Genre from './containers/Genre'
 import Genres from './containers/Genres'
 
+//import style from './app.css'
+
 render (
   <Provider store={store}>
     <Router history={browserHistory}>
