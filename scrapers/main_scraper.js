@@ -7,20 +7,20 @@ var cheerio = require('cheerio');
 var Promise = require('bluebird');
 var moment = require('moment');
 
-var db = require('APP/db');
-var Genre = require('APP/db/models/genre');
-var Manga = require('APP/db/models/manga');
-var MangaDetails = require('APP/db/models/manga_detail');
-var MangaGenre = require('APP/db/models/manga_genre');
+// var db = require('APP/db');
+// var Genre = require('APP/db/models/genre');
+// var Manga = require('APP/db/models/manga');
+// var MangaDetails = require('APP/db/models/manga_detail');
+// var MangaGenre = require('APP/db/models/manga_genre');
 
-var fetchGenresPromise = require('./genres_scraper').fetchGenresPromise;
+// var fetchGenresPromise = require('./genres_scraper').fetchGenresPromise;
 
 // Should be less as some of their data includes
 // novels and there is a check to prevent those
 // items from being added to the db
 var topMangaPromise = [
   rp('https://myanimelist.net/topmanga.php'), // 50
-  rp('https://myanimelist.net/topmanga.php?limit=50'), // 100
+  // rp('https://myanimelist.net/topmanga.php?limit=50'), // 100
   // rp('https://myanimelist.net/topmanga.php?limit=100'), // 150
   // rp('https://myanimelist.net/topmanga.php?limit=150'), // 200
   // rp('https://myanimelist.net/topmanga.php?limit=200'), // 250
@@ -35,57 +35,59 @@ var topMangaPromise = [
 // ////////////////////////////////////////////
 // // Scrape top manga and genres
 // ////////////////////////////////////////////
-var manga_links = [];
+var manga_links = ['https://myanimelist.net/manga/55215/Utsuro_no_Hako_to_Zero_no_Maria'];
 var manga = [];
 
-var fetchTopMangaPromise = function() {
-Promise.all(topMangaPromise)
-.then(function (htmlArr) {
-  htmlArr.forEach(function(htmlObj, idx) {
-    var $ = cheerio.load(htmlObj);
+// var fetchTopMangaPromise = function() {
+// Promise.all(topMangaPromise)
+// .then(function (htmlArr) {
+//   htmlArr.forEach(function(htmlObj, idx) {
+//     var $ = cheerio.load(htmlObj);
 
-    // Process html to get top manga
-    $('.ranking-list .title .detail').each(function(idx, elem) {
-      // Analyzing text to make sure it's a manga and not a novel
-      var text = $(this).find('.information').text();
-      if (text.includes('Manga')) {
-        var mangaTitleLink = $(this).find('.hoverinfo_trigger');
-        var manga_title = $(mangaTitleLink).text();
-        var manga_link = $(mangaTitleLink).attr('href');
+//     // Process html to get top manga
+//     $('.ranking-list .title .detail').each(function(idx, elem) {
+//       // Analyzing text to make sure it's a manga and not a novel
+//       var text = $(this).find('.information').text();
+//       if (text.includes('Manga')) {
+//         var mangaTitleLink = $(this).find('.hoverinfo_trigger');
+//         var manga_title = $(mangaTitleLink).text();
+//         var manga_link = $(mangaTitleLink).attr('href');
 
-        manga.push({ title: manga_title });
-        manga_links.push(manga_link);
-      }
-    });
-  });
+//         manga.push({ title: manga_title });
+//         manga_links.push(manga_link);
+//       }
+//     });
+//   });
 
-  // Populate db with manga data
-  var mangaPromise = Manga.bulkCreate(manga);
-  return mangaPromise;
-})
-.then(function(createdManga) {
-  console.log('Seeded manga table successfully.');
-  return processMangaLinks();
-})
-.catch(errorFunc);
-}
+//   // Populate db with manga data
+//   var mangaPromise = Manga.bulkCreate(manga);
+//   return mangaPromise;
+// })
+// .then(function(createdManga) {
+//   console.log('Seeded manga table successfully.');
+//   return processMangaLinks();
+// })
+// .catch(errorFunc);
+// }
 
-var errorFunc = function(err) {
-  console.log(err);
-}
+// var errorFunc = function(err) {
+//   console.log(err);
+// }
+// // ////////////////////////////////////////////
+
+// fetchGenresPromise
+// .then(function(sequelizeObj) {
+//   return fetchTopMangaPromise();
+// })
+// .catch(errorFunc);
+
+// var errorFunc = function(err) {
+//   // console.log(err);
+// }
+
 // ////////////////////////////////////////////
 
-fetchGenresPromise
-.then(function(sequelizeObj) {
-  return fetchTopMangaPromise();
-})
-.catch(errorFunc);
 
-var errorFunc = function(err) {
-  // console.log(err);
-}
-
-// ////////////////////////////////////////////
 
 var processMangaLinks = function() {
   manga_links.forEach(function(url) {
@@ -97,6 +99,8 @@ var processMangaLinks = function() {
       var manga_title = $('h1 span').text();
       var manga_table = {}
       var manga_genres = [];
+      var manga_authors = {};
+      var manga_publishers = [];
 
       console.log(manga_title);
 
@@ -109,6 +113,22 @@ var processMangaLinks = function() {
             manga_genres.push(genre);
         }
       });
+
+      // Creating array of authors
+      $('a').each(function(idx, elem) {
+        var authorRegex = /\/people\/\d*\/\w*/g;
+        var publisherRegex = /\/manga\/magazine\/\d*\/\w*/g;
+        var link = $(this).attr('href');
+        //console.log(authorRegex.exec(authors_href));
+
+        var dbMainUrl = 'https://myanimelist.net';
+        if (authorRegex.test(link)) {
+          manga_authors[authors_href] = dbMainUrl+link;
+        } else if (publisherRegex.test(link)) {
+          manga_publishers.push(dbMainUrl+link)
+        }
+      });
+      console.log(manga_authors);
 
       // Published data
       $('.dark_text').each(function(idx, elem) {
@@ -143,52 +163,55 @@ var processMangaLinks = function() {
       // var downloadImagePromise = download(manga_img_url, manga_title.toLowerCase() + '_details_img.jpg');
 
       // Return promise with various info
-      var findMangaPromise = Manga.findOne({ where: { title: manga_title } });
-      return Promise.all([manga_genres, findMangaPromise, manga_table, manga_details]);
+      //var findMangaPromise = Manga.findOne({ where: { title: manga_title } });
+      //return Promise.all([manga_genres, findMangaPromise, manga_table, manga_details]);
+      return;
     })
     .then(function(result) {
-      console.log('===========');
-      console.log(result[1]);
-      console.log('===========');
-      var manga_genres = result[0];
-      var mangaId = result[1].dataValues.id;
-      var manga_details = result[3];
-      manga_details.manga_id = mangaId;
+      // console.log('===========');
+      // console.log(result[1]);
+      // console.log('===========');
+      // var manga_genres = result[0];
+      // var mangaId = result[1].dataValues.id;
+      // var manga_details = result[3];
+      // manga_details.manga_id = mangaId;
 
-      var updateMangaTable = result[1].update({
-        jp_title: result[2].jp_title,
-        publication_start: result[2].publication_start,
-        publication_end: result[2].publication_end,
-      });
+      // var updateMangaTable = result[1].update({
+      //   jp_title: result[2].jp_title,
+      //   publication_start: result[2].publication_start,
+      //   publication_end: result[2].publication_end,
+      // });
 
-      // Get all the genre ids
-      var findGenrePromise = Genre.findAll({
-        where: {
-          name: manga_genres
-        }
-      });
+      // // Get all the genre ids
+      // var findGenrePromise = Genre.findAll({
+      //   where: {
+      //     name: manga_genres
+      //   }
+      // });
 
-      var createMangaDetailsPromise = MangaDetails.findOrCreate({where: manga_details});
-      return Promise.all([findGenrePromise, mangaId, createMangaDetailsPromise, updateMangaTable]);
+      // var createMangaDetailsPromise = MangaDetails.findOrCreate({where: manga_details});
+      // return Promise.all([findGenrePromise, mangaId, createMangaDetailsPromise, updateMangaTable]);
+      return;
     })
     .then(function(results) {
-      var mangaId = results[1];
-      var genres_results = results[0];
-      var manga_details = results[2];
+      // var mangaId = results[1];
+      // var genres_results = results[0];
+      // var manga_details = results[2];
 
-      var mangaGenresArr = [];
-      genres_results.forEach(function(resultObj, idx) {
-        var genre_id = resultObj.dataValues.id;
-        var mangaGenre = {
-          manga_id: mangaId,
-          genre_id: genre_id
-        };
+      // var mangaGenresArr = [];
+      // genres_results.forEach(function(resultObj, idx) {
+      //   var genre_id = resultObj.dataValues.id;
+      //   var mangaGenre = {
+      //     manga_id: mangaId,
+      //     genre_id: genre_id
+      //   };
 
-         mangaGenresArr.push(mangaGenre);
-      });
+      //    mangaGenresArr.push(mangaGenre);
+      // });
 
-      // var createMangaGenresPromise = MangaGenre.bulkCreate(mangaGenresArr);
-      return MangaGenre.bulkCreate(mangaGenresArr);
+      // // var createMangaGenresPromise = MangaGenre.bulkCreate(mangaGenresArr);
+      // return MangaGenre.bulkCreate(mangaGenresArr);
+      return;
     })
 
     // Scraping and updating db complete
@@ -202,6 +225,8 @@ var processMangaLinks = function() {
 
   })
 }
+
+processMangaLinks();
 
 // Function to download an image based on a url provided
 // and set to place the image in the public/images directory
