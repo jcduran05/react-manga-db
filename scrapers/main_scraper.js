@@ -15,22 +15,17 @@ var moment = require('moment');
 
 // var fetchGenresPromise = require('./genres_scraper').fetchGenresPromise;
 
+var generateTopMangaLinks = require('./manga_links.js');
+// Num will be the quantity of items that we are looking for
+// Because of filtering, there may be less than the num passed
+//generateTopMangaLinks(100);
+
 // Should be less as some of their data includes
 // novels and there is a check to prevent those
 // items from being added to the db
 var topMangaPromise = [
-  rp('https://myanimelist.net/topmanga.php'), // 50
-  // rp('https://myanimelist.net/topmanga.php?limit=50'), // 100
-  // rp('https://myanimelist.net/topmanga.php?limit=100'), // 150
-  // rp('https://myanimelist.net/topmanga.php?limit=150'), // 200
-  // rp('https://myanimelist.net/topmanga.php?limit=200'), // 250
-  // rp('https://myanimelist.net/topmanga.php?limit=250'), // 300
-  // rp('https://myanimelist.net/topmanga.php?limit=300'), // 350
-  // rp('https://myanimelist.net/topmanga.php?limit=350'), // 400
-  // rp('https://myanimelist.net/topmanga.php?limit=400'), // 450
-  // rp('https://myanimelist.net/topmanga.php?limit=450'), // 500
-  // rp('https://myanimelist.net/topmanga.php?limit=500'), // 550
-  ];
+  rp('https://myanimelist.net/topmanga.php'), // 1 - 50
+];
 
 // ////////////////////////////////////////////
 // // Scrape top manga and genres
@@ -102,7 +97,7 @@ var processMangaLinks = function() {
       var manga_authors = {};
       var manga_publishers = [];
 
-      console.log(manga_title);
+      //console.log(manga_title);
 
 
       // Creating array of genres
@@ -128,7 +123,7 @@ var processMangaLinks = function() {
           manga_publishers.push(dbMainUrl+link)
         }
       });
-      console.log(manga_authors);
+      //console.log(manga_authors);
 
       // Published data
       $('.dark_text').each(function(idx, elem) {
@@ -226,10 +221,10 @@ var processMangaLinks = function() {
   })
 }
 
-processMangaLinks();
+//processMangaLinks();
 
 // Function to download an image based on a url provided
-// and set to place the image in the public/images directory
+// and place the image in the public/images directory
 var download = function(uri, filename, callback){
   request.head(uri, function(err, res, body){
     request(uri).pipe(fs.createWriteStream('./public/images/' + filename)).on('close', function() { console.log('Finished downloading image.') });
