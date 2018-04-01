@@ -49,6 +49,7 @@
     "cheerio": "^0.22.0",
     "concurrently": "^3.1.0",
     "cookie-session": "^2.0.0-alpha.1",
+    "dotenv": "^5.0.1",
     "enzyme": "^2.5.1",
     "express": "^4.14.0",
     "finalhandler": "^1.0.0",
