@@ -13,8 +13,6 @@ var moment = require('moment');
 // var MangaDetails = require('APP/db/models/manga_detail');
 // var MangaGenre = require('APP/db/models/manga_genre');
 
-// var fetchGenresPromise = require('./genres_scraper').fetchGenresPromise;
-
 var generateTopMangaLinks = require('./manga_links.js');
 // Num will be the quantity of items that we are looking for
 // Because of filtering, there may be less than the num passed
@@ -26,6 +24,8 @@ var generateTopMangaLinks = require('./manga_links.js');
 var topMangaPromise = [
   rp('https://myanimelist.net/topmanga.php'), // 1 - 50
 ];
+
+// var fetchGenresPromise = require('./genres_scraper').fetchGenresPromise;
 
 // ////////////////////////////////////////////
 // // Scrape top manga and genres
@@ -123,7 +123,6 @@ var processMangaLinks = function() {
           manga_publishers.push(dbMainUrl+link)
         }
       });
-      //console.log(manga_authors);
 
       // Published data
       $('.dark_text').each(function(idx, elem) {
