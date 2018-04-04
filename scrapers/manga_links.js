@@ -1,6 +1,8 @@
 var request = require('request');
 var rp = require('request-promise');
 
+var cheerio = require('cheerio');
+var Promise = require('bluebird');
 // Example of links that will be generateed
 // rp('https://myanimelist.net/topmanga.php'), // 1 - 50
 // rp('https://myanimelist.net/topmanga.php?limit=50'), // 51 - 100
@@ -18,7 +20,7 @@ var rp = require('request-promise');
 // Start will be where we are starting from to slowly collect data
 // Because of filtering, there may be less than the num passed
 
-module.exports = function(num, start) {
+var generateUrls = function(num, start) {
   var linksArr = [];
   
   if (num > 100) {
@@ -33,3 +35,47 @@ module.exports = function(num, start) {
 
   return linksArr;
 };
+
+var processUrlsAndGetComics = function(pagesOfTableData) {
+  var manga_links = [];
+  var manga = [];
+  return Promise.all(pagesOfTableData)
+  .then(function (htmlArr) {
+    htmlArr.forEach(function(htmlObj, idx) {
+      var $ = cheerio.load(htmlObj);
+
+      //console.log(htmlObj);
+      // Process html to get top manga
+      $('.ranking-list .title .detail').each(function(idx, elem) {
+        // Analyzing text to make sure it's a manga and not a novel
+        var text = $(this).find('.information').text();
+        if (text.includes('Manga')) {
+          var mangaTitleLink = $(this).find('.hoverinfo_trigger');
+          var manga_title = $(mangaTitleLink).text();
+          var manga_link = $(mangaTitleLink).attr('href');
+
+          manga.push({ title: manga_title });
+          manga_links.push(manga_link);
+        }
+      });
+    });
+
+    // Populate db with manga data
+    // var mangaPromise = Manga.bulkCreate(manga);
+    //return mangaPromise;
+    return [manga, manga_links];
+  })
+  .then(function(createdMangaArr) {
+    console.log('Seeded manga table successfully.');
+    // return processMangaLinks();
+    return createdMangaArr;
+  })
+  .catch(errorFunc);
+};
+
+var errorFunc = function(err) {
+  // console.log(err);
+}
+
+module.exports.generateUrls = generateUrls;
+module.exports.processUrlsAndGetComics = processUrlsAndGetComics;

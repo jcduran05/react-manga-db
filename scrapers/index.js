@@ -16,12 +16,10 @@ var MangaGenre = require('APP/db/models/manga_genre');
 ////////////////////////////////////////////
 // Setup
 ////////////////////////////////////////////
-var generateTopMangaLinks = require('./manga_links.js');
+var generateComicsUrls = require('./manga_links.js').generateUrls;
 // var fetchGenresPromise = require('./genres_scraper').fetchGenresPromise;
 
-
-var manga_links = ['https://myanimelist.net/manga/55215/Utsuro_no_Hako_to_Zero_no_Maria'];
-var manga = [];
+//'https://myanimelist.net/manga/55215/Utsuro_no_Hako_to_Zero_no_Maria'
 
 ////////////////////////////////////////////
 // Scrape Process
@@ -30,54 +28,58 @@ var manga = [];
 // Run function that generate links and wraps
 // them in a request that can be processed
 // Array of request objects 
-var topMangaPromise = generateTopMangaLinks(0, 0);
-
+var getUrls = generateComicsUrls(0, 0);
 // Step 2
 // Process the links from step 1 to add comics to
 // database and return individual links to each comic
+var getComics = require('./manga_links.js').processUrlsAndGetComics;
+// var processUrlsAndGetComics = function(pagesOfTableData) {
+//   var manga_links = [];
+//   var manga = [];
+//   return Promise.all(pagesOfTableData)
+//   .then(function (htmlArr) {
+//     htmlArr.forEach(function(htmlObj, idx) {
+//       var $ = cheerio.load(htmlObj);
 
-var fetchTopMangaPromise = function(pagesOfTableData) {
-Promise.all(pagesOfTableData)
-.then(function (htmlArr) {
-  htmlArr.forEach(function(htmlObj, idx) {
-    var $ = cheerio.load(htmlObj);
+//       // Process html to get top manga
+//       $('.ranking-list .title .detail').each(function(idx, elem) {
+//         // Analyzing text to make sure it's a manga and not a novel
+//         var text = $(this).find('.information').text();
+//         if (text.includes('Manga')) {
+//           var mangaTitleLink = $(this).find('.hoverinfo_trigger');
+//           var manga_title = $(mangaTitleLink).text();
+//           var manga_link = $(mangaTitleLink).attr('href');
 
-    // Process html to get top manga
-    $('.ranking-list .title .detail').each(function(idx, elem) {
-      // Analyzing text to make sure it's a manga and not a novel
-      var text = $(this).find('.information').text();
-      if (text.includes('Manga')) {
-        var mangaTitleLink = $(this).find('.hoverinfo_trigger');
-        var manga_title = $(mangaTitleLink).text();
-        var manga_link = $(mangaTitleLink).attr('href');
+//           manga.push({ title: manga_title });
+//           manga_links.push(manga_link);
+//         }
+//       });
+//     });
 
-        manga.push({ title: manga_title });
-        manga_links.push(manga_link);
-      }
-    });
-  });
+//     // Populate db with manga data
+//     // var mangaPromise = Manga.bulkCreate(manga);
+//     //return mangaPromise;
+//     return [manga, manga_links];
+//   })
+//   .then(function(createdMangaArr) {
+//     console.log('Seeded manga table successfully.');
+//     // return processMangaLinks();
+//     return createdMangaArr;
+//   })
+//   .catch(errorFunc);
+// };
 
-  console.log(manga);
-  console.log(manga_links);
-
-  // Populate db with manga data
-  // var mangaPromise = Manga.bulkCreate(manga);
-  //return mangaPromise;
-  return;
-})
-.then(function(createdManga) {
-  console.log('Seeded manga table successfully.');
-  // return processMangaLinks();
-  return;
-})
-.catch(errorFunc);
-}
+console.log(getComics);
 
 var errorFunc = function(err) {
-  console.log(err);
+  // console.log(err);
 }
 
-fetchTopMangaPromise(topMangaPromise);
+getComics(getUrls)
+.then(function(createdMangaArr) {
+  console.log(createdMangaArr);
+  return;
+});
 // ////////////////////////////////////////////
 
 // fetchGenresPromise
