@@ -33,51 +33,18 @@ var getUrls = generateComicsUrls(0, 0);
 // Process the links from step 1 to add comics to
 // database and return individual links to each comic
 var getComics = require('./manga_links.js').processUrlsAndGetComics;
-// var processUrlsAndGetComics = function(pagesOfTableData) {
-//   var manga_links = [];
-//   var manga = [];
-//   return Promise.all(pagesOfTableData)
-//   .then(function (htmlArr) {
-//     htmlArr.forEach(function(htmlObj, idx) {
-//       var $ = cheerio.load(htmlObj);
-
-//       // Process html to get top manga
-//       $('.ranking-list .title .detail').each(function(idx, elem) {
-//         // Analyzing text to make sure it's a manga and not a novel
-//         var text = $(this).find('.information').text();
-//         if (text.includes('Manga')) {
-//           var mangaTitleLink = $(this).find('.hoverinfo_trigger');
-//           var manga_title = $(mangaTitleLink).text();
-//           var manga_link = $(mangaTitleLink).attr('href');
-
-//           manga.push({ title: manga_title });
-//           manga_links.push(manga_link);
-//         }
-//       });
-//     });
-
-//     // Populate db with manga data
-//     // var mangaPromise = Manga.bulkCreate(manga);
-//     //return mangaPromise;
-//     return [manga, manga_links];
-//   })
-//   .then(function(createdMangaArr) {
-//     console.log('Seeded manga table successfully.');
-//     // return processMangaLinks();
-//     return createdMangaArr;
-//   })
-//   .catch(errorFunc);
-// };
-
-console.log(getComics);
 
 var errorFunc = function(err) {
   // console.log(err);
 }
 
+var manga_links = [];
+
 getComics(getUrls)
 .then(function(createdMangaArr) {
-  console.log(createdMangaArr);
+  manga_links = createdMangaArr[1];
+
+  processMangaLinks(manga_links);
   return;
 });
 // ////////////////////////////////////////////
@@ -94,9 +61,7 @@ getComics(getUrls)
 
 // ////////////////////////////////////////////
 
-
-
-var processMangaLinks = function() {
+var processMangaLinks = function(manga_links) {
   manga_links.forEach(function(url) {
     rp(url)
     .then(function (html) {
@@ -109,7 +74,7 @@ var processMangaLinks = function() {
       var manga_authors = {};
       var manga_publishers = [];
 
-      //console.log(manga_title);
+      console.log(manga_title);
 
 
       // Creating array of genres
