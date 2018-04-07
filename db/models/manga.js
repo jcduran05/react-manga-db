@@ -12,6 +12,9 @@ const Manga = db.define('manga', {
   jp_title: {
     type: Sequelize.STRING,
   },
+  score: {
+    type: Sequelize.FLOAT,
+  },
   publication_start: Sequelize.DATE,
   publication_end: Sequelize.DATE,
 })
