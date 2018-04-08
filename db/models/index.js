@@ -7,11 +7,12 @@
 const User = require('./user')
 const OAuth = require('./oauth')
 
-const Creator = require('./creator')
+const Author = require('./author')
 const Genre = require('./genre')
 const Manga = require('./manga')
+const Publisher = require('./publisher')
+const MangaAuthor = require('./manga_author')
 const MangaDetail = require('./manga_detail')
-const MangaCreator = require('./manga_creator')
 const MangaGenre = require('./manga_genre')
 const UserManga = require('./user_manga')
 
@@ -20,9 +21,12 @@ const UserManga = require('./user_manga')
 Manga.hasOne(MangaDetail);
 MangaDetail.belongsTo(Manga);
 
+Manga.hasOne(Publisher);
+Publisher.hasMany(Manga);
+
 // Setting up relations that require a pivot table
-Manga.belongsToMany(Creator, { through: MangaCreator });
-Creator.belongsToMany(Manga, { through: MangaCreator });
+Manga.belongsToMany(Author, { through: MangaAuthor });
+Author.belongsToMany(Manga, { through: MangaAuthor });
 
 Manga.belongsToMany(Genre, { through: MangaGenre });
 Genre.belongsToMany(Manga, { through: MangaGenre });
