@@ -39,13 +39,13 @@ var getUrls = generateComicsUrls(0, 0);
 var getComics = require('./manga_links.js').processUrlsAndGetComics;
 
 var manga_links = [];
-getComics(getUrls)
-.then(function(createdMangaArr) {
-  manga_links = createdMangaArr[1];
+// getComics(getUrls)
+// .then(function(createdMangaArr) {
+//   manga_links = createdMangaArr[1];
 
-  //processMangaLinks(manga_links);
-  return;
-});
+//   //processMangaLinks(manga_links);
+//   return;
+// });
 
 // Step 3
 // Process links. Each link will take you to
@@ -72,12 +72,28 @@ var processMangaLinks = function(manga_links) {
     .then(function (html) {
       var $ = cheerio.load(html);
 
+      //console.log(html);
       var manga_details = {};
       var manga_title = $('h1 span').text();
       var manga_table = {}
       var manga_genres = [];
       var manga_authors = {};
-      var manga_publishers = [];
+      var manga_publishers = {};
+
+      // $('.dark_text').each(function(idx, elem) {
+      // //   // console.log($(elem).text());
+      // console.log('made it');
+      // var genre_href = $(elem).find('a');
+      // console.log($(genre_href));
+      // //   if($(elem).text() == 'Authors:') {
+      // //    var links = $(elem).siblings('a')
+      // //    links.each(function(idx, elem) {
+      //      console.log($(this).attr('href'));
+      // //    })
+      // //   }
+        
+      // });
+      //var links = $('div.js-scrollfix-bottom div a');
 
       // Creating array of genres
       $('.spaceit a').each(function(idx, elem) {
@@ -93,15 +109,17 @@ var processMangaLinks = function(manga_links) {
         var authorRegex = /\/people\/\d*\/\w*/g;
         var publisherRegex = /\/manga\/magazine\/\d*\/\w*/g;
         var link = $(this).attr('href');
-        //console.log(authorRegex.exec(authors_href));
+        var text = $(this).text();
 
         var dbMainUrl = 'https://myanimelist.net';
         if (authorRegex.test(link)) {
-          manga_authors[authors_href] = dbMainUrl+link;
+          manga_authors[text] = dbMainUrl+link;
         } else if (publisherRegex.test(link)) {
-          manga_publishers.push(dbMainUrl+link)
+          manga_publishers[text] = dbMainUrl+link;
         }
       });
+
+      console.log(manga_publishers);
 
       // Published data
       $('.dark_text').each(function(idx, elem) {
@@ -131,6 +149,7 @@ var processMangaLinks = function(manga_links) {
         }
       });
 
+      // console.log(manga_details);
       // Manga image
       // var manga_img_url = $('.js-scrollfix-bottom').find('img').attr('src');
       // var downloadImagePromise = download(manga_img_url, manga_title.toLowerCase() + '_details_img.jpg');
@@ -139,55 +158,56 @@ var processMangaLinks = function(manga_links) {
       //var findMangaPromise = Manga.findOne({ where: { title: manga_title } });
       //return Promise.all([manga_genres, findMangaPromise, manga_table, manga_details]);
       return;
+      
     })
-    .then(function(result) {
-      // console.log('===========');
-      // console.log(result[1]);
-      // console.log('===========');
-      // var manga_genres = result[0];
-      // var mangaId = result[1].dataValues.id;
-      // var manga_details = result[3];
-      // manga_details.manga_id = mangaId;
+  //   .then(function(result) {
+  //     // console.log('===========');
+  //     // console.log(result[1]);
+  //     // console.log('===========');
+  //     // var manga_genres = result[0];
+  //     // var mangaId = result[1].dataValues.id;
+  //     // var manga_details = result[3];
+  //     // manga_details.manga_id = mangaId;
 
-      // var updateMangaTable = result[1].update({
-      //   jp_title: result[2].jp_title,
-      //   publication_start: result[2].publication_start,
-      //   publication_end: result[2].publication_end,
-      // });
+  //     // var updateMangaTable = result[1].update({
+  //     //   jp_title: result[2].jp_title,
+  //     //   publication_start: result[2].publication_start,
+  //     //   publication_end: result[2].publication_end,
+  //     // });
 
-      // // Get all the genre ids
-      // var findGenrePromise = Genre.findAll({
-      //   where: {
-      //     name: manga_genres
-      //   }
-      // });
+  //     // // Get all the genre ids
+  //     // var findGenrePromise = Genre.findAll({
+  //     //   where: {
+  //     //     name: manga_genres
+  //     //   }
+  //     // });
 
-      // var createMangaDetailsPromise = MangaDetails.findOrCreate({where: manga_details});
-      // return Promise.all([findGenrePromise, mangaId, createMangaDetailsPromise, updateMangaTable]);
-      return;
-    })
-    .then(function(results) {
-      // var mangaId = results[1];
-      // var genres_results = results[0];
-      // var manga_details = results[2];
+  //     // var createMangaDetailsPromise = MangaDetails.findOrCreate({where: manga_details});
+  //     // return Promise.all([findGenrePromise, mangaId, createMangaDetailsPromise, updateMangaTable]);
+  //     return;
+  //   })
+  //   .then(function(results) {
+  //     // var mangaId = results[1];
+  //     // var genres_results = results[0];
+  //     // var manga_details = results[2];
 
-      // var mangaGenresArr = [];
-      // genres_results.forEach(function(resultObj, idx) {
-      //   var genre_id = resultObj.dataValues.id;
-      //   var mangaGenre = {
-      //     manga_id: mangaId,
-      //     genre_id: genre_id
-      //   };
+  //     // var mangaGenresArr = [];
+  //     // genres_results.forEach(function(resultObj, idx) {
+  //     //   var genre_id = resultObj.dataValues.id;
+  //     //   var mangaGenre = {
+  //     //     manga_id: mangaId,
+  //     //     genre_id: genre_id
+  //     //   };
 
-      //    mangaGenresArr.push(mangaGenre);
-      // });
+  //     //    mangaGenresArr.push(mangaGenre);
+  //     // });
 
-      // // var createMangaGenresPromise = MangaGenre.bulkCreate(mangaGenresArr);
-      // return MangaGenre.bulkCreate(mangaGenresArr);
-      return;
-    })
+  //     // // var createMangaGenresPromise = MangaGenre.bulkCreate(mangaGenresArr);
+  //     // return MangaGenre.bulkCreate(mangaGenresArr);
+  //     return;
+  //   })
 
-    // Scraping and updating db complete
+  //   // Scraping and updating db complete
     .then(function() {
       console.log('Process complete.');
       return;
@@ -196,10 +216,10 @@ var processMangaLinks = function(manga_links) {
       // console.log(err);
     })
 
-  })
-}
+  // })
+})};
 
-//processMangaLinks();
+processMangaLinks(['https://myanimelist.net/manga/99314/Kimi_no_Na_wa']);
 
 // Function to download an image based on a url provided
 // and place the image in the public/images directory
