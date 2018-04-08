@@ -80,21 +80,6 @@ var processMangaLinks = function(manga_links) {
       var manga_authors = {};
       var manga_publishers = {};
 
-      // $('.dark_text').each(function(idx, elem) {
-      // //   // console.log($(elem).text());
-      // console.log('made it');
-      // var genre_href = $(elem).find('a');
-      // console.log($(genre_href));
-      // //   if($(elem).text() == 'Authors:') {
-      // //    var links = $(elem).siblings('a')
-      // //    links.each(function(idx, elem) {
-      //      console.log($(this).attr('href'));
-      // //    })
-      // //   }
-        
-      // });
-      //var links = $('div.js-scrollfix-bottom div a');
-
       // Creating array of genres
       $('.spaceit a').each(function(idx, elem) {
         var genre_href = $(this).attr('href').split('/');
@@ -118,8 +103,6 @@ var processMangaLinks = function(manga_links) {
           manga_publishers[text] = dbMainUrl+link;
         }
       });
-
-      console.log(manga_publishers);
 
       // Published data
       $('.dark_text').each(function(idx, elem) {
@@ -149,7 +132,6 @@ var processMangaLinks = function(manga_links) {
         }
       });
 
-      // console.log(manga_details);
       // Manga image
       // var manga_img_url = $('.js-scrollfix-bottom').find('img').attr('src');
       // var downloadImagePromise = download(manga_img_url, manga_title.toLowerCase() + '_details_img.jpg');
