@@ -21,6 +21,10 @@ var generateComicsUrls = require('./manga_links.js').generateUrls;
 
 //'https://myanimelist.net/manga/55215/Utsuro_no_Hako_to_Zero_no_Maria'
 
+var errorFunc = function(err) {
+  // console.log(err);
+}
+
 ////////////////////////////////////////////
 // Scrape Process
 ////////////////////////////////////////////
@@ -34,19 +38,20 @@ var getUrls = generateComicsUrls(0, 0);
 // database and return individual links to each comic
 var getComics = require('./manga_links.js').processUrlsAndGetComics;
 
-var errorFunc = function(err) {
-  // console.log(err);
-}
-
 var manga_links = [];
-
 getComics(getUrls)
 .then(function(createdMangaArr) {
   manga_links = createdMangaArr[1];
 
-  processMangaLinks(manga_links);
+  //processMangaLinks(manga_links);
   return;
 });
+
+// Step 3
+// Process links. Each link will take you to
+// a summary page of the comic where I will
+// get that manga's summary, genres, image, etc
+
 // ////////////////////////////////////////////
 
 // fetchGenresPromise
@@ -73,9 +78,6 @@ var processMangaLinks = function(manga_links) {
       var manga_genres = [];
       var manga_authors = {};
       var manga_publishers = [];
-
-      console.log(manga_title);
-
 
       // Creating array of genres
       $('.spaceit a').each(function(idx, elem) {

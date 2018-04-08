@@ -46,15 +46,21 @@ var processUrlsAndGetComics = function(pagesOfTableData) {
 
       //console.log(htmlObj);
       // Process html to get top manga
-      $('.ranking-list .title .detail').each(function(idx, elem) {
+      $('.ranking-list').each(function(idx, elem) {
         // Analyzing text to make sure it's a manga and not a novel
-        var text = $(this).find('.information').text();
+        var text = $(this).find('.title .detail .information').text();
+
+        // This table also includes books. Seaching for manga
+        // before adding is to our list
         if (text.includes('Manga')) {
           var mangaTitleLink = $(this).find('.hoverinfo_trigger');
           var manga_title = $(mangaTitleLink).text();
           var manga_link = $(mangaTitleLink).attr('href');
 
-          manga.push({ title: manga_title });
+          var score = $(this).find('.score .text').text();
+          score = score ? score : 0;
+
+          manga.push({ title: manga_title, score: score });
           manga_links.push(manga_link);
         }
       });
