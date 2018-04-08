@@ -3,7 +3,7 @@
 const Sequelize = require('sequelize')
 const db = require('APP/db')
 
-const MangaCreator = db.define('manga_creator', {
+const Author = db.define('author', {
     first_name: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -26,4 +26,4 @@ const MangaCreator = db.define('manga_creator', {
     }
 })
 
-module.exports = MangaCreator
+module.exports = Author

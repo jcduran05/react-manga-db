@@ -8,6 +8,10 @@ const scrapedUrls = db.define('scraped_urls', {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
     url: {
         type: Sequelize.STRING,
         allowNull: false,
