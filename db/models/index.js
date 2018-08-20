@@ -21,9 +21,6 @@ const UserManga = require('./user_manga')
 Manga.hasOne(MangaDetail);
 MangaDetail.belongsTo(Manga);
 
-Manga.hasOne(Publisher);
-Publisher.hasMany(Manga);
-
 // Setting up relations that require a pivot table
 Manga.belongsToMany(Author, { through: MangaAuthor });
 Author.belongsToMany(Manga, { through: MangaAuthor });
