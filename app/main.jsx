@@ -15,6 +15,7 @@ import Home from './containers/Home'
 import Manga from './containers/Manga'
 import Genre from './containers/Genre'
 import Genres from './containers/Genres'
+// import registerServiceWorker from './registerServiceWorker'
 
 //import style from './app.css'
 

@@ -1,0 +1,4 @@
+{
+  "main.js": "./public/bundle.js",
+  "main.js.map": "./public/bundle.js.map"
+}

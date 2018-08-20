@@ -88,6 +88,7 @@
     "chai": "^3.5.0",
     "cross-env": "^5.1.4",
     "css-loader": "^0.28.4",
+    "jest": "^23.5.0",
     "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
     "style-loader": "^0.18.2",
@@ -95,6 +96,7 @@
     "supertest-as-promised": "^4.0.1",
     "volleyball": "^1.4.1",
     "webpack": "^2.2.1",
-    "webpack-livereload-plugin": "^0.10.0"
+    "webpack-livereload-plugin": "^0.10.0",
+    "webpack-manifest-plugin": "^2.0.3"
   }
 }
